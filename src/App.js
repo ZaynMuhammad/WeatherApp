@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import "./App.css";
 
 function App() {
+  const api = (v) =>
+    `https://api.openweathermap.org/data/2.5/weather?q=${v}&appid=3069ae2718e40f8dc1998b7250e16f10`;
+  const myInit = { mode: "cors" };
+  const myRequest = new Request(api("jerusalem"), myInit);
+
+  useEffect(() => {
+    fetch(myRequest)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("bad network");
+        }
+        console.log(response);
+        return response.json();
+      })
+      .then((data) => console.log(data.main.temp))
+      .catch((e) => console.log(e));
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <h1>where are u?</h1>
+      </div>
+      <div>
+        <input></input>
+      </div>
+      <img alt="placeholder"></img>
     </div>
   );
 }
 
 export default App;
+
+/*
+    Set up a blank HTML document with the appropriate links to your JavaScript and CSS files.
+    Write the functions that hit the API. You’re going to want functions that can take a location 
+    and return the weather data for that location. 
+    For now, just console.log() the information.
+    Write the functions that process the JSON data you’re getting from the API and return an object 
+    with only the data you require for your app.
+    Set up a simple form that will let users input their location and will fetch the weather info 
+    (still just console.log() it).
+    Display the information on your webpage!
+    Add any styling you like!
+    Optional: add a ‘loading’ component that displays from the time the form is submitted until 
+    the information comes back from the API.
+    Push that baby to github and share your solution below!
+*/
