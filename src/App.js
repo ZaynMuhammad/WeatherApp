@@ -1,22 +1,40 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
+  const [location, setLocation] = useState({});
   const api = (v) =>
     `https://api.openweathermap.org/data/2.5/weather?q=${v}&appid=3069ae2718e40f8dc1998b7250e16f10`;
   const myInit = { mode: "cors" };
   const myRequest = new Request(api("jerusalem"), myInit);
 
+  function getLocation(e) {
+    fetch(api(e.target.value), myInit)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("bad network request");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        e.target.value = "";
+        return setLocation(data);
+      })
+      .catch((e) => console.log(e));
+    console.log(location);
+  }
+
   useEffect(() => {
     fetch(myRequest)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("bad network");
+          throw new Error("bad network request");
         }
-        console.log(response);
         return response.json();
       })
-      .then((data) => console.log(data.main.temp))
+      .then((response) => {
+        return setLocation(response);
+      })
       .catch((e) => console.log(e));
   }, []);
 
@@ -26,9 +44,11 @@ function App() {
         <h1>where are u?</h1>
       </div>
       <div>
-        <input></input>
+        <input
+          onKeyPress={(e) => (e.key === "Enter" ? getLocation(e) : null)}
+        ></input>
       </div>
-      <img alt="placeholder"></img>
+      <p>{location.name}</p>
     </div>
   );
 }
