@@ -7,6 +7,7 @@ function App() {
   const [degreeFormat, setDegreeFormat] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [deviceLocation, setDeviceLocation] = useState([]);
+  const [errorLoading, setErrorLoading] = useState(false);
 
   const api = (v) =>
     `https://api.openweathermap.org/data/2.5/weather?q=${v}&appid=3069ae2718e40f8dc1998b7250e16f10`;
@@ -18,6 +19,7 @@ function App() {
   const convertToCelcius = (v) => (v - 30) / 2;
 
   function getUserLocation() {
+    debugger;
     navigator.geolocation.getCurrentPosition((position) => {
       const ps = [
         Math.round(position.coords.latitude),
@@ -34,6 +36,7 @@ function App() {
   }, [deviceLocation]);
 
   function fetchResults() {
+    setIsLoading(true);
     fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${deviceLocation[0]}&lon=${deviceLocation[1]}&appid=3069ae2718e40f8dc1998b7250e16f10`,
       myInit
@@ -46,13 +49,12 @@ function App() {
         return response.json();
       })
       .then((data) => {
-        document.querySelector(".not-found").innerHTML = "";
+        setErrorLoading(false);
         setIsLoading(false);
         return setLocation(data);
       })
       .catch((e) => {
-        document.querySelector(".not-found").innerHTML =
-          "Ops, something went wrong";
+        setErrorLoading(true);
         console.log(e);
       });
     console.log(location);
@@ -67,14 +69,13 @@ function App() {
         return response.json();
       })
       .then((data) => {
-        document.querySelector(".not-found").innerHTML = "";
-        e.target.value = "";
+        setErrorLoading(false);
         setIsLoading(false);
+        e.target.value = "";
         return setLocation(data);
       })
       .catch((e) => {
-        document.querySelector(".not-found").innerHTML =
-          "Ops, something went wrong";
+        setErrorLoading(true);
         console.log(e);
       });
     console.log(location);
@@ -108,11 +109,7 @@ function App() {
           fontSize: "30px",
         }}
       >
-        <p>Where are u?</p>
-        <label class="switch">
-          <input type="checkbox"></input>
-          <span class="slider round"></span>
-        </label>
+        <p>Hi, where are u?</p>
       </div>
       <div
         style={{
@@ -133,10 +130,12 @@ function App() {
           placeholder="city..."
           onKeyPress={(e) => (e.key === "Enter" ? getLocation(e) : null)}
         ></input>
-        <p className="not-found"></p>
       </div>
+      <p className="not-found">
+        {errorLoading ? "Ops, something went wrong" : null}
+      </p>
       {isLoading ? (
-        <p>Loading ...</p>
+        <p style={{ fontSize: "40px" }}>Loading ...</p>
       ) : (
         <div>
           <div>
@@ -149,7 +148,7 @@ function App() {
                 fontSize: "40px",
               }}
             >
-              In {location.name}, {location.sys.country}
+              {location.name}, {location.sys.country}
               <img
                 alt="flag"
                 src={`https://www.countryflags.io/${location.sys.country}/flat/64.png`}
@@ -166,8 +165,8 @@ function App() {
               }}
             >
               {degreeFormat
-                ? location.main.temp
-                : convertToCelcius(location.main.temp)}{" "}
+                ? Math.round(location.main.temp - -459.67)
+                : convertToCelcius(Math.round(location.main.temp))}{" "}
               {getDegreeFormat()}{" "}
               <img
                 alt="weather-icon"
@@ -175,10 +174,22 @@ function App() {
               ></img>
             </p>
             <p>
-              Feels like {location.main.feels_like}
+              Feels like{" "}
+              {degreeFormat
+                ? Math.round(location.main.feels_like - -459.67)
+                : convertToCelcius(Math.round(location.feels_like))}
               {getDegreeFormat()}.
             </p>
             <p>{location.weather[0].description}</p>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <label class="switch">
+              <input
+                onChange={() => setDegreeFormat(!degreeFormat)}
+                type="checkbox"
+              ></input>
+              <span class="slider round"></span>
+            </label>
           </div>
         </div>
       )}

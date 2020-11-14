@@ -1,5 +1,15 @@
 .App {
+  margin-top: 40px;
   text-align: center;
+  max-width: 450px;
+  height: 570px;
+  margin-right: auto;
+  margin-left: auto;
+  background: #4281ee;
+  border-radius: 10px;
+  color: white;
+  border-radius: 40px;
+  background: linear-gradient(145deg, #478aff, #3b74d6);
 }
 
 .App-logo {
