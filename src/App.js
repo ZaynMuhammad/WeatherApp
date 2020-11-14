@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import React from "react";
 
 function App() {
   const [location, setLocation] = useState({});
@@ -23,16 +24,16 @@ function App() {
         Math.round(position.coords.longitude),
       ];
       setDeviceLocation(ps);
-      return ps;
     });
   }
 
-  const userDeviceLocation = () => {
-    if ("geolocation" in window === false) {
-      console.log("hi");
-      getUserLocation();
+  useEffect(() => {
+    if (deviceLocation.length !== 0) {
+      fetchResults();
     }
+  }, [deviceLocation]);
 
+  function fetchResults() {
     fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${deviceLocation[0]}&lon=${deviceLocation[1]}&appid=3069ae2718e40f8dc1998b7250e16f10`,
       myInit
@@ -55,7 +56,7 @@ function App() {
         console.log(e);
       });
     console.log(location);
-  };
+  }
 
   function getLocation(e) {
     fetch(myRequest(e.target.value))
@@ -93,18 +94,42 @@ function App() {
         return response;
       })
       .catch((e) => console.log(e));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     console.log(location);
   }, []);
 
   return (
     <div className="App">
-      <div>
-        <h1>Where are u?</h1>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          justifyContent: "center",
+          fontSize: "30px",
+        }}
+      >
+        <p>Where are u?</p>
+        <label class="switch">
+          <input type="checkbox"></input>
+          <span class="slider round"></span>
+        </label>
       </div>
-      <div>
-        <button onClick={() => userDeviceLocation()}>location access</button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "20px",
+          alignItems: "center",
+        }}
+      >
+        <img
+          style={{ cursor: "pointer" }}
+          alt="location access"
+          onClick={() => getUserLocation()}
+          src="https://img.icons8.com/fluent/48/000000/location.png"
+        ></img>
         <input
+          style={{ height: "max-content" }}
           placeholder="city..."
           onKeyPress={(e) => (e.key === "Enter" ? getLocation(e) : null)}
         ></input>
@@ -115,24 +140,26 @@ function App() {
       ) : (
         <div>
           <div>
-            <h3
+            <p
               style={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 gap: "20px",
+                fontSize: "40px",
               }}
             >
-              Now in {location.name}, {location.sys.country}
+              In {location.name}, {location.sys.country}
               <img
                 alt="flag"
                 src={`https://www.countryflags.io/${location.sys.country}/flat/64.png`}
               ></img>
-            </h3>
+            </p>
           </div>
           <div>
-            <h1
+            <p
               style={{
+                fontSize: "30px",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -146,7 +173,7 @@ function App() {
                 alt="weather-icon"
                 src={`http://openweathermap.org/img/wn/${location.weather[0].icon}@2x.png`}
               ></img>
-            </h1>
+            </p>
             <p>
               Feels like {location.main.feels_like}
               {getDegreeFormat()}.
