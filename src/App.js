@@ -8,6 +8,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [deviceLocation, setDeviceLocation] = useState([]);
   const [errorLoading, setErrorLoading] = useState(false);
+  const [date, setDate] = useState("");
 
   const api = (v) =>
     `https://api.openweathermap.org/data/2.5/weather?q=${v}&appid=3069ae2718e40f8dc1998b7250e16f10`;
@@ -15,11 +16,13 @@ function App() {
   const myRequest = (v) => new Request(api(v), myInit);
 
   const getDegreeFormat = () => (degreeFormat ? "°F" : "°C");
-
-  const convertToCelcius = (v) => (v - 30) / 2;
+  const convertToFarenheits = (v) => Math.round(((v - 273.15) * 9) / 5 + 32);
+  const convertToCelcius = (v) => Math.round(v - 273.15);
+  const convertToLocalTime = (v) => {
+    return new Date(v).toLocaleString();
+  };
 
   function getUserLocation() {
-    debugger;
     navigator.geolocation.getCurrentPosition((position) => {
       const ps = [
         Math.round(position.coords.latitude),
@@ -34,6 +37,21 @@ function App() {
       fetchResults();
     }
   }, [deviceLocation]);
+
+  const getDate = () => {
+    var date = new Date();
+    setDate(
+      date.toLocaleTimeString(navigator.language, {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })
+    );
+  };
+
+  setInterval(() => {
+    getDate();
+  }, 1000);
 
   function fetchResults() {
     setIsLoading(true);
@@ -109,8 +127,16 @@ function App() {
           fontSize: "30px",
         }}
       >
-        <p>Hi, where are u?</p>
+        {/* <p>Weather App</p> */}
+        {/* <p>🌞 ☁️ ⛈️ ☂️ ❄️ ⛱️ 🌊 </p> */}
+        <img
+          style={{ width: "60px" }}
+          alt="app-logo"
+          src="https://www.feirox.com/rivu/2016/04/Klara-1-1.png"
+        ></img>
+        <p>Current Weather</p>
       </div>
+      <br></br>
       <div
         style={{
           display: "flex",
@@ -120,15 +146,17 @@ function App() {
         }}
       >
         <img
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", width: "30px" }}
           alt="location access"
           onClick={() => getUserLocation()}
-          src="https://img.icons8.com/fluent/48/000000/location.png"
+          src="https://img.icons8.com/ios-filled/50/000000/marker.png"
         ></img>
         <input
           style={{ height: "max-content" }}
           placeholder="city..."
-          onKeyPress={(e) => (e.key === "Enter" ? getLocation(e) : null)}
+          onKeyPress={(e) =>
+            e.key === "Enter" && e.target.value !== "" ? getLocation(e) : null
+          }
         ></input>
       </div>
       <p className="not-found">
@@ -138,59 +166,94 @@ function App() {
         <p style={{ fontSize: "40px" }}>Loading ...</p>
       ) : (
         <div>
-          <div>
-            <p
+          <div className="location-info">
+            <div
               style={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 gap: "20px",
                 fontSize: "40px",
+                margin: "0px",
               }}
             >
-              {location.name}, {location.sys.country}
+              <p style={{ margin: 0 }}>
+                {location.name}, {location.sys.country}
+              </p>
               <img
                 alt="flag"
                 src={`https://www.countryflags.io/${location.sys.country}/flat/64.png`}
               ></img>
-            </p>
+            </div>
+            <div>
+              <p
+                style={{
+                  fontSize: "30px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {degreeFormat
+                  ? convertToFarenheits(Math.round(location.main.temp))
+                  : convertToCelcius(Math.round(location.main.temp))}
+                {getDegreeFormat()}
+                <img
+                  alt="weather-icon"
+                  src={`http://openweathermap.org/img/wn/${location.weather[0].icon}@2x.png`}
+                ></img>
+              </p>
+              <p>
+                Feels like{" "}
+                {degreeFormat
+                  ? convertToFarenheits(Math.round(location.main.feels_like))
+                  : convertToCelcius(Math.round(location.main.feels_like))}
+                {getDegreeFormat()} | {location.weather[0].description} |
+                Humidity: {location.main.humidity}%
+              </p>
+              <p>
+                Sunrise:{" "}
+                {() => {
+                  convertToLocalTime(location.sys.sunrise);
+                }}
+              </p>
+              <p>Sunset: {}</p>
+              <br></br>
+            </div>
           </div>
-          <div>
-            <p
-              style={{
-                fontSize: "30px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {degreeFormat
-                ? Math.round(location.main.temp - -459.67)
-                : convertToCelcius(Math.round(location.main.temp))}{" "}
-              {getDegreeFormat()}{" "}
-              <img
-                alt="weather-icon"
-                src={`http://openweathermap.org/img/wn/${location.weather[0].icon}@2x.png`}
-              ></img>
-            </p>
-            <p>
-              Feels like{" "}
-              {degreeFormat
-                ? Math.round(location.main.feels_like - -459.67)
-                : convertToCelcius(Math.round(location.feels_like))}
-              {getDegreeFormat()}.
-            </p>
-            <p>{location.weather[0].description}</p>
-          </div>
+
           <div style={{ display: "flex", justifyContent: "center" }}>
             <label class="switch">
               <input
                 onChange={() => setDegreeFormat(!degreeFormat)}
+                checked={degreeFormat}
                 type="checkbox"
               ></input>
-              <span class="slider round"></span>
+              <span
+                class="slider round"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "20px",
+                    color: "black",
+                    zIndex: 2,
+                    position: "relative",
+                    fontSize: "12px",
+                  }}
+                >
+                  <span>C</span>
+                  <span>F</span>
+                </div>
+              </span>
             </label>
           </div>
+          <p>{date}</p>
         </div>
       )}
     </div>
