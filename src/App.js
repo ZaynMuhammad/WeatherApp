@@ -93,22 +93,20 @@ function App() {
   // }
 
   useEffect(() => {
-    setIsLoading(true);
-    // getInitialLocation();
-
-    fetch(api("london"), myInit)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("bad network request");
-        }
-        return response.json();
-      })
-      .then((response) => {
-        setLocation(response);
+    async function getInitialLocation() {
+      setIsLoading(true);
+      try {
+        const response = await fetch(api("london"), myInit);
+        const data = await response.json();
+        setErrorLoading(false);
+        setLocation(data);
         setIsLoading(false);
-        return response;
-      })
-      .catch((e) => console.log(e));
+      } catch (e) {
+        setErrorLoading(true);
+        console.error(e);
+      }
+    }
+    getInitialLocation();
   }, []);
 
   return (
