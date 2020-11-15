@@ -18,6 +18,8 @@ function App() {
   const myInit = { mode: "cors" };
   const myRequest = (v) => new Request(api(v), myInit);
 
+  const toggleFormat = () => setDegreeFormat(!degreeFormat);
+
   setInterval(() => {
     var date = new Date();
     setHour(
@@ -121,9 +123,9 @@ function App() {
           <p style={{ fontSize: "40px" }}>Loading ...</p>
         ) : (
           <div>
-            <LocationInfo location={location} />
+            <LocationInfo degreeFormat={degreeFormat} location={location} />
             <SwitchButton
-              setDegreeFormat={() => setDegreeFormat(!degreeFormat)}
+              toggleFormat={() => toggleFormat()}
               degreeFormat={degreeFormat}
             />
             <p>{hour}</p>
