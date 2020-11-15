@@ -47,6 +47,7 @@ function App() {
     }
   }, [deviceLocation]);
 
+  // gets location from device
   async function fetchResults() {
     setIsLoading(true);
     try {
@@ -55,58 +56,53 @@ function App() {
         myInit
       );
       const data = await response.json();
+      setLocation(data);
       setErrorLoading(false);
       setIsLoading(false);
-      setLocation(data);
     } catch (e) {
+      setIsLoading(false);
       setErrorLoading(true);
       console.error(e);
     }
   }
 
+  // gets location from input
   async function getLocation(e) {
     setIsLoading(true);
     try {
       const response = await fetch(myRequest(e.target.value));
+      if (!response.ok) {
+        throw new Error("bad network request");
+      }
       const data = await response.json();
-      setErrorLoading(false);
-      setIsLoading(false);
-      e.target.value = "";
       setLocation(data);
+      e.target.value = "";
+      setIsLoading(false);
+      setErrorLoading(false);
     } catch (e) {
       setErrorLoading(true);
+      setIsLoading(false);
       console.error(e);
     }
   }
 
-  // async function getInitialLocation() {
-  //   setIsLoading(true);
-  //   try {
-  //     const response = await fetch(api("london"), myInit);
-  //     const data = await response.json();
-  //     setErrorLoading(false);
-  //     setIsLoading(false);
-  //     setLocation(data);
-  //   } catch (e) {
-  //     setErrorLoading(true);
-  //     console.error(e);
-  //   }
-  // }
+  // initial location
+  async function getInitialLocation() {
+    setIsLoading(true);
+    try {
+      const response = await fetch(api("london"), myInit);
+      const data = await response.json();
+      setErrorLoading(false);
+      setLocation(data);
+      setIsLoading(false);
+    } catch (e) {
+      setErrorLoading(true);
+      setIsLoading(false);
+      console.error(e);
+    }
+  }
 
   useEffect(() => {
-    async function getInitialLocation() {
-      setIsLoading(true);
-      try {
-        const response = await fetch(api("london"), myInit);
-        const data = await response.json();
-        setErrorLoading(false);
-        setLocation(data);
-        setIsLoading(false);
-      } catch (e) {
-        setErrorLoading(true);
-        console.error(e);
-      }
-    }
     getInitialLocation();
   }, []);
 
@@ -116,7 +112,7 @@ function App() {
         <Header
           errorLoading={errorLoading}
           getUserLocation={getUserLocation}
-          getLocation={(e) => getLocation(e)}
+          getLocation={getLocation}
         />
         {isLoading ? (
           <p style={{ fontSize: "40px" }}>Loading ...</p>
