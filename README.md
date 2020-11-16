@@ -5,7 +5,7 @@ For [TheOdinProject](https://theodinproject.com) fullstack JS curriculum
 ## Used:
 - react functional components
 - react hooks
-- openweathermap api
+- [openweathermap](https://openweathermap.org/) api
 
 ## Practiced: 
 - promise
