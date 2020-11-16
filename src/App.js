@@ -20,6 +20,7 @@ function App() {
 
   const toggleFormat = () => setDegreeFormat(!degreeFormat);
 
+  // clock on bottom of app
   setInterval(() => {
     var date = new Date();
     setHour(
@@ -31,6 +32,7 @@ function App() {
     );
   }, 1000);
 
+  // gets location from device
   function getUserLocation() {
     navigator.geolocation.getCurrentPosition((position) => {
       const ps = [
@@ -47,7 +49,7 @@ function App() {
     }
   }, [deviceLocation]);
 
-  // gets location from device
+  // gets location data for device
   async function fetchResults() {
     setIsLoading(true);
     try {
@@ -55,6 +57,9 @@ function App() {
         `https://api.openweathermap.org/data/2.5/weather?lat=${deviceLocation[0]}&lon=${deviceLocation[1]}&appid=3069ae2718e40f8dc1998b7250e16f10&units=metric`,
         myInit
       );
+      if (!response.ok) {
+        throw new Error("bad network request");
+      }
       const data = await response.json();
       setLocation(data);
       setErrorLoading(false);
@@ -91,6 +96,9 @@ function App() {
     setIsLoading(true);
     try {
       const response = await fetch(api("london"), myInit);
+      if (!response.ok) {
+        throw new Error("bad network request");
+      }
       const data = await response.json();
       setErrorLoading(false);
       setLocation(data);

@@ -17,6 +17,12 @@
   animation: 2s ease-in appearFromNone forwards;
 }
 
+.align-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .location-info {
   opacity: 0;
   animation: 2s ease-in-out appearFromNone forwards;
