@@ -13,8 +13,8 @@ For [TheOdinProject](https://theodinproject.com) fullstack JS curriculum
 - api fetch calls
 
 
-## Demo
-[Link](https://dovimaj.github.io/weather-app/)
+## [Demo](https://dovimaj.github.io/weather-app/)
+
 ![img](./img-weather.png)
 
 # Getting Started with Create React App
