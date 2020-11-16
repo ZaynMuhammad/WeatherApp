@@ -10,7 +10,7 @@ for theOdinProject
 ## Practiced: 
 - promise
 - async await
-- api calls
+- api fetch calls
 
 # Getting Started with Create React App
 
