@@ -1,3 +1,17 @@
+# Weather App Project
+
+for theOdinProject
+
+## Used:
+- react functional components
+- react hooks
+- openweathermap api
+
+## Practiced: 
+- promise
+- async await
+- api calls
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
