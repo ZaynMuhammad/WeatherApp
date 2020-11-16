@@ -12,6 +12,11 @@ For [TheOdinProject](https://theodinproject.com) fullstack JS curriculum
 - async await
 - api fetch calls
 
+
+## Demo
+[Link](https://dovimaj.github.io/weather-app/)
+![img](./img-weather.png)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
