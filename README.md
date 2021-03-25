@@ -1,6 +1,6 @@
 # Weather App Project
 
-For [TheOdinProject](https://theodinproject.com) fullstack JS curriculum
+For [TheOdinProject](https://theodinproject.com) Full-stack JavaScript curriculum
 
 ## Used:
 - react functional components
