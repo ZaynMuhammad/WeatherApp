@@ -11,9 +11,9 @@
 - api fetch calls
 
 
-## [Demo](https://dovimaj.github.io/weather-app/)
+## [Demo](https://zaynmuhammad.github.io/WeatherApp/)
 
-![img](./img-weather.png)
+![img]()
 
 # Getting Started with Create React App
 
