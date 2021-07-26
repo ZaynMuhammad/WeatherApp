@@ -11,7 +11,7 @@
 - api fetch calls
 
 
-## [Demo](https://zaynmuhammad.github.io/WeatherApp/)
+## [Demo]()
 
 ![img]()
 
