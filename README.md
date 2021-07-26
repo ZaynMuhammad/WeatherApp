@@ -11,7 +11,7 @@
 - api fetch calls
 
 
-## [Demo](https://dovimaj.github.io/weather-app/)
+## [Demo](https://.github.io/weather-app/)
 
 ![img](./img-weather.png)
 
