@@ -1,7 +1,5 @@
 # Weather App Project
 
-For [TheOdinProject](https://theodinproject.com) Full-stack JavaScript curriculum
-
 ## Used:
 - react functional components
 - react hooks
