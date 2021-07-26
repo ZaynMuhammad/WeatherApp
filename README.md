@@ -11,9 +11,9 @@
 - api fetch calls
 
 
-## [Demo]()
+## [Demo](https://weatherapp-zayn.netlify.app/)
 
-![img]()
+![img](WeatherAppImg.png)
 
 # Getting Started with Create React App
 
